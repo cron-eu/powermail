@@ -37,10 +37,7 @@ class FrontendUtility
      */
     public static function getCurrentPageIdentifier(): int
     {
-        if (self::getRequest() !== null) {
-            return self::getRequest()->getAttribute('frontend.page.information')->getId() ?? 0;
-        }
-        return 0;
+        return self::getRequest()?->getAttribute('frontend.page.information')?->getId() ?? 0;
     }
 
     /**
@@ -48,10 +45,7 @@ class FrontendUtility
      */
     public static function getSysLanguageUid(): int
     {
-        if (self::getRequest() !== null) {
-            return self::getRequest()->getAttribute('language')->getLanguageId();
-        }
-        return 0;
+        return self::getRequest()?->getAttribute('language')?->getLanguageId() ?? 0;
     }
 
     public static function getPluginName(): string
@@ -201,6 +195,9 @@ class FrontendUtility
             $geoInfo = json_decode($json);
             if (!empty($geoInfo->country)) {
                 $country = $geoInfo->country;
+            }
+            if ($geoInfo->status === 'fail') {
+                $country = $geoInfo->message;
             }
         }
 

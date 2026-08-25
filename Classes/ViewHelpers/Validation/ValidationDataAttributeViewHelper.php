@@ -81,15 +81,15 @@ class ValidationDataAttributeViewHelper extends AbstractValidationViewHelper
             if ($field->isMandatory()) {
                 if ($this->isNativeValidationEnabled()) {
                     $additionalAttributes['required'] = 'required';
-                    $additionalAttributes['aria-required'] = 'true';
+
                     // remove required attribute if more checkboxes than 1
                     if ($field->getType() === 'check' && $iteration['total'] > 1) {
                         unset($additionalAttributes['required']);
-                        unset($additionalAttributes['aria-required']);
                     }
-                } elseif ($this->isClientValidationEnabled()) {
-                    $additionalAttributes['data-powermail-required'] = 'true';
-                    $additionalAttributes['aria-required'] = 'true';
+                } else {
+                    if ($this->isClientValidationEnabled()) {
+                        $additionalAttributes['data-powermail-required'] = 'true';
+                    }
                 }
 
                 if ($this->isClientValidationEnabled()) {
@@ -110,7 +110,6 @@ class ValidationDataAttributeViewHelper extends AbstractValidationViewHelper
                         }
                         if ($field->getType() === 'check') {
                             $additionalAttributes['data-powermail-required'] = 'true';
-                            $additionalAttributes['aria-required'] = 'true';
                         }
                     }
                 }
@@ -219,10 +218,11 @@ class ValidationDataAttributeViewHelper extends AbstractValidationViewHelper
                  * javascript example: <input type="text" data-powermail-pattern="[a-zA-Z]." />
                  */
             case 5:
+                $pattern = $this->settings['validation']['lettersOnlyPattern'] ?? '^[A-Za-z]+$';
                 if ($this->isNativeValidationEnabled()) {
-                    $additionalAttributes['pattern'] = '[A-Za-z]+';
+                    $additionalAttributes['pattern'] = $pattern;
                 } elseif ($this->isClientValidationEnabled()) {
-                    $additionalAttributes['data-powermail-pattern'] = '[a-zA-Z]+';
+                    $additionalAttributes['data-powermail-pattern'] = $pattern;
                 }
 
                 break;
